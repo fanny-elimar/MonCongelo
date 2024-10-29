@@ -1,0 +1,9 @@
+body {
+    color: blue;
+    text-align: center
+}
+
+#edit-form {
+    display: none;
+    margin-top: 20px;
+}
