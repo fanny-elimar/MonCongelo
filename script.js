@@ -1,6 +1,7 @@
 const noResultDiv = document.getElementById('no-result');
+congelo_display = document.getElementById('display-congelo');
+login_form = document.getElementById('login-form');
 token = "";
-console.log(token);
 
 const url = 'https://whispering-ravine-73923-3f19d70e5dc9.herokuapp.com/api/product';
 
@@ -28,8 +29,6 @@ function login() {
     .then(data => {
         token = data.apiToken; // Assure-toi que le token est bien dans la réponse
         // Ensuite, fais ta requête avec le token
-        const congelo_display = document.getElementById('display-congelo');
-        const login_form = document.getElementById('login-form');
         congelo_display.classList.remove('d-none');
         login_form.classList.add('d-none');
         showAll();
@@ -38,7 +37,12 @@ function login() {
 function logout() {
     // Rediriger l'utilisateur vers la page de connexion
    // window.location.href = '/MonCongelo/index.php';  // Ou /home, selon ton besoin
-   window.location.replace('/moncongelo/index.html');
+   //window.location.replace('/moncongelo/index.html');
+   congelo_display.classList.add('d-none');
+   login_form.classList.remove('d-none');
+   document.getElementById('username').value="";
+   document.getElementById('password').value="";
+   token = "";
 }
 
 function showAll() {
