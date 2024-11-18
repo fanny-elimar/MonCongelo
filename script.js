@@ -37,7 +37,7 @@ function login() {
 
 function logout() {
     // Rediriger l'utilisateur vers la page de connexion
-    window.location.href = '/moncongelo/index.html';  // Ou /home, selon ton besoin
+    window.location.href = '/MonCongelo/index.html';  // Ou /home, selon ton besoin
 }
 
 function showAll() {
