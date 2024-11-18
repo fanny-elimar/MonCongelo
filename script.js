@@ -46,6 +46,7 @@ function logout() {
 }
 
 function showAll() {
+    loadCategories();
     //const url = 'https://whispering-ravine-73923-3f19d70e5dc9.herokuapp.com/api/product';
     const init = { 
         method: 'GET',
@@ -84,7 +85,13 @@ function showAll() {
 function addItem() {
     const addName = document.getElementById('add-nom').value;
     const addQuantity = document.getElementById('add-quantity').value;
-    const addCategory = document.getElementById('add-category').value;
+    const selectCategoryAdd = document.getElementById('add-category').value;
+    const selectCategoryNewAdd = document.getElementById('add-category-new').value;
+    if (selectCategoryNewAdd) {
+        addCategory = selectCategoryNewAdd;
+    } else {
+        addCategory = selectCategoryAdd;
+    }
     fetch(url, { 
         method: 'POST',
         headers: {
@@ -99,6 +106,7 @@ function addItem() {
         document.getElementById('add-nom').value = ''; // Réinitialise le champ
         document.getElementById('add-quantity').value = ''; // Réinitialise le champ
         document.getElementById('add-category').value = ''; // Réinitialise le champ
+        document.getElementById('add-category-new').value = ''; // Réinitialise le champ
     })
     .catch(error => console.error('Erreur :', error));
 }
@@ -153,13 +161,21 @@ function editItem(id, name, quantity, category) {
     document.getElementById('edit-nom').value = name;
     document.getElementById('edit-quantity').value = quantity;
     document.getElementById('edit-category').value = category;
+    document.getElementById('edit-category-new').value = '';
     document.getElementById('edit-form').style.display = 'block'; // Affiche le formulaire
 }
 
 function updateItem() {
     const newName = document.getElementById('edit-nom').value;
     const newQuantity = document.getElementById('edit-quantity').value;
-    const newCategory = document.getElementById('edit-category').value;
+    const selectCategoryEdit = document.getElementById('edit-category').value;
+    const selectCategoryNewEdit = document.getElementById('edit-category-new').value;
+    if (selectCategoryNewEdit) {
+        newCategory = selectCategoryNewEdit;
+    } else {
+        newCategory = selectCategoryEdit;
+    }
+    
     fetch(url+'/' + currentId, {
         method: 'PUT',
         headers: {
@@ -273,3 +289,40 @@ function filterByName(filterValue) {
         alert('Une erreur est survenue lors de la récupération des données.');
     });
 }    
+
+function loadCategories() {
+    const init = { 
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json",
+            'X-AUTH-TOKEN': token
+        }
+    }
+    fetch(url, init)
+    .then(response => response.json())
+    .then(datas => {
+        categories = []
+        datas.forEach(data => {
+            categories.push(data.category)})
+            uniq_cat = [...new Set(categories)]
+            console.log(uniq_cat)
+        categorieSelects = document.querySelectorAll('.category');
+        categorieSelects.forEach(categorieSelect => {
+            categorieSelect.innerHTML = '<option value="">-- Choisir une catégorie --</option>';
+        // Ajouter chaque catégorie comme option dans le select
+        uniq_cat.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category;
+            option.textContent = category;
+            categorieSelect.appendChild(option);
+        });
+        })
+        
+        // Vider le select avant d'ajouter les nouvelles options
+        
+    })
+    .catch(error => {
+        console.error('Erreur lors du chargement des catégories :', error);
+    });
+}
+

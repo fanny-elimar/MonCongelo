@@ -71,7 +71,14 @@
     </div>
     <div class="input-group input-group-sm mb-3 row">
         <label for="edit-category" class="form-label col-3">Catégorie:</label>
-        <input type="text" id="edit-category" class="form-control col-6">
+        <select id="edit-category" name="edit-category" class="form-control col-6 category">
+        <option value="" class="form-control col-3">-- Choisir une catégorie --</option>
+        <!-- Les catégories seront insérées dynamiquement ici -->
+        </select>
+    </div>
+    <div class="input-group input-group-sm mb-3 row">
+        <label for="edit-category" class="form-label col-3">Nouvelle catégorie:</label>
+        <input type="text" id="edit-category-new" name="edit-category" placeholder="Si aucune catégorie n'est choisie" class="form-control col-6"/>
     </div>
     <button onclick="updateItem()" class="btn-primary btn btn-sm">Mettre à jour</button>
     <button onclick="cancelEdit()" class="btn-primary btn btn-sm">Annuler</button>
@@ -87,10 +94,20 @@
         <label for="add-quantity" class="form-label col-3">Quantité:</label>
         <input type="text" id="add-quantity" class="form-control col-6">
     </div>
+
+    
     <div class="input-group input-group-sm mb-3 row">
         <label for="add-category" class="form-label col-3">Catégorie:</label>
-        <input type="text" id="add-category" class="form-control col-6">
+        <select id="add-category" name="add-category" class="form-control col-6 category">
+        <option value="" class="form-control col-3 category">-- Choisir une catégorie --</option>
+        <!-- Les catégories seront insérées dynamiquement ici -->
+        </select>
     </div>
+    <div class="input-group input-group-sm mb-3 row">
+        <label for="add-category" class="form-label col-3">Nouvelle catégorie:</label>
+        <input type="text" id="add-category-new" name="add-category" placeholder="Si aucune catégorie n'est choisie" class="form-control col-6 category"/>
+    </div>
+</div>
     <button onclick="addItem()" class="btn-primary btn btn-sm">Ajouter</button>
 </div>
 
