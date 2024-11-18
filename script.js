@@ -1,4 +1,6 @@
 const noResultDiv = document.getElementById('no-result');
+token = "";
+console.log(token);
 
 const url = 'https://whispering-ravine-73923-3f19d70e5dc9.herokuapp.com/api/product';
 
@@ -35,7 +37,7 @@ function login() {
 
 function logout() {
     // Rediriger l'utilisateur vers la page de connexion
-    window.location.href = '/index.html';  // Ou /home, selon ton besoin
+    window.location.href = '/index.php';  // Ou /home, selon ton besoin
 }
 
 function showAll() {
