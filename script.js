@@ -22,7 +22,6 @@ function login() {
             throw new Error('Erreur de connexion : ' + response.statusText);
         }
         return response.json();
-
     })
     .then(data => {
         token = data.apiToken; // Assure-toi que le token est bien dans la réponse
