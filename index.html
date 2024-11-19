@@ -28,13 +28,12 @@
         </div>
 <div class="d-none" id="display-congelo">
     <button onclick="logout()" class="btn-primary btn btn-sm col-4">Déconnexion</button>
-<h6>Recherche</h6>
+<div class="border rounded mx-3 container-fluid">
+    <h6>Recherche</h6>
         <div id="search-form-name" class="form-floating mx-3">
                 <input type="text" id="search-by-name" class="form-control mb-3">
                 <label for="search-by-name" class="">Recherche par nom...</label>
-    
                 <button onclick="filterByName()" class="btn-primary btn btn-sm col-3">Chercher</button>
-                
             </div>
             <div id="search-form-category" class="form-floating m-3">
                 <input type="text" id="search-by-category" class="form-control mb-3">
@@ -42,9 +41,13 @@
     
                 <button onclick="filterByCategory()" class="btn-primary btn btn-sm col-3">Chercher</button>
             </div>
-            <button onclick="showAll()" class="btn-primary btn btn-sm col-3">Tout voir</button>
+        </div>
+            <button onclick="initDatas(),showAll()" class="btn-primary btn btn-sm col-3">Tout voir</button>
+            <div class="row justify-content-center mt-1">
+                <p id="message_modif" class="alert alert-success d-none col-6"></p>
+            </div>
 <div id="no-result"></div>
-            <div class="table-responsive mt-5">
+            <div class="table-responsive mt-3">
 <table id="data-table" class="table table-sm">
     <thead>
         <tr>
@@ -58,7 +61,9 @@
         <!-- Les données seront insérées ici -->
     </tbody>
 </table>
+<button id="load-more-button" class="btn-primary btn btn-sm col-3">Voir +</button>
 </div>
+
 <div id="edit-form" class="mb-5">
     <h5>Modifier l'élément</h5>
     <div class="input-group input-group-sm mb-3 row">

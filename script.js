@@ -2,6 +2,14 @@ const noResultDiv = document.getElementById('no-result');
 congelo_display = document.getElementById('display-congelo');
 login_form = document.getElementById('login-form');
 token = "";
+const loadMoreButton = document.getElementById('load-more-button');
+const tbody = document.getElementById('data-table').querySelector('tbody');
+const message_modif = document.getElementById('message_modif')
+
+currentOffset = 0;  // Offset initial (commence à 0)
+const limit = 20;  // Nombre de produits par page
+const noLimit = 500;
+const noOffset = 0;
 
 const url = 'https://whispering-ravine-73923-3f19d70e5dc9.herokuapp.com/api/product';
 
@@ -43,9 +51,12 @@ function logout() {
    document.getElementById('username').value="";
    document.getElementById('password').value="";
    token = "";
+ initDatas();
+ initMessage();
 }
 
 function showAll() {
+    initMessage();
     loadCategories();
     //const url = 'https://whispering-ravine-73923-3f19d70e5dc9.herokuapp.com/api/product';
     const init = { 
@@ -55,14 +66,13 @@ function showAll() {
             'X-AUTH-TOKEN': token
         },
     }
-    fetch(url, init)
+    fetch(url+'?limit='+limit+'&offset='+currentOffset, init)
     .then(response => {
         return response.json(); // Parse the response body as JSON
     })
     .then(data => {
-        const tbody = document.getElementById('data-table').querySelector('tbody');
-        tbody.innerHTML = ''; // Efface le contenu précédent
-        data.forEach(item => {
+        console.log(data)
+        data.products.forEach(item => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${item.name}</td>
@@ -74,13 +84,29 @@ function showAll() {
                     </td>
             `;
             tbody.appendChild(row);
+    
         });
+        // Mettre à jour l'offset pour la prochaine requête
+        currentOffset += limit;
+        console.log(currentOffset);
+
+        // Désactiver le bouton si on a chargé tous les produits
+        if (currentOffset >= data.total_count) {
+            loadMoreButton.disabled = true;
+            loadMoreButton.innerText = 'Aucun autre produit';
+        }
+    
     })
     .catch(error => {
         console.error('There has been a problem with your fetch operation:', error);
         alert('Une erreur est survenue lors de la récupération des données.');
     });
 }
+
+// Gérer le clic sur le bouton "Charger plus"
+document.getElementById('load-more-button').addEventListener('click', () => {
+    showAll();
+  });
 
 function addItem() {
     const addName = document.getElementById('add-nom').value;
@@ -102,7 +128,11 @@ function addItem() {
     })
     .then(response => {
         if (!response.ok) throw new Error('Erreur lors de l\'ajout');
-        showAll(token); // Rafraîchit les données
+        createMessage(`Le produit <span style="font-weight: bold;">${addName} </span> a bien été ajouté :
+        <br>quantité : ${addQuantity}
+        <br>catégorie : ${addCategory} `)
+        initDatas();
+        showAll(); // Rafraîchit les données
         document.getElementById('add-nom').value = ''; // Réinitialise le champ
         document.getElementById('add-quantity').value = ''; // Réinitialise le champ
         document.getElementById('add-category').value = ''; // Réinitialise le champ
@@ -125,7 +155,11 @@ function deleteItem(id) {
         if (!response.ok) {
             throw new Error(`Erreur lors de la suppression : ${response.status} ${response.statusText}`);
         }
-        showAll(token); // Rafraîchit les données
+        console.log(response)
+        initMessage();
+        createMessage(`Le produit a bien été supprimé.`)
+        initDatas();
+        showAll(); // Rafraîchit les données
     })
     .catch(error => {
         console.error('Erreur :', error);
@@ -133,8 +167,8 @@ function deleteItem(id) {
     });
 }
 
-function show() {
-    const id='52';
+function show(id) {
+    
     const init = { 
         method: 'GET',
         headers: {
@@ -147,8 +181,19 @@ function show() {
         return response.json(); // Parse the response body as JSON
     })
     .then(data => {
-        let results = document.getElementById("results");
-        results.innerHTML=JSON.stringify(data);
+        //let results = document.getElementById("results");
+        const row2 = document.createElement('tr');
+            row2.innerHTML = `
+                <td>${data.name}</td>
+                <td>${data.quantity}</td>
+                <td>${data.category}</td>
+                <td>
+                    <button onclick="editItem(${data.id}, '${data.name}','${data.quantity}','${data.category}')" class="btn btn-primary btn-sm mb-1">📝</button>
+                    <button onclick="deleteItem(${data.id})" class="btn btn-primary btn-sm mb-1">❌</button>
+                    </td>
+            `;
+            tbody.replaceWith(row2);
+        //tbody.innerHTML=JSON.stringify(data);
     })
     .catch(error => {
         console.error('There has been a problem with your fetch operation:', error);
@@ -186,7 +231,12 @@ function updateItem() {
     })
     .then(response => {
         if (!response.ok) throw new Error('Erreur lors de la modification');
-        showAll(token); // Rafraîchit les données
+        initMessage();
+        createMessage(`Le produit <span style="font-weight: bold;">${newName} </span> a bien été modifié :
+        <br>quantité : ${newQuantity}
+        <br>catégorie : ${newCategory} `)
+        initDatas();
+        showAll(); // Rafraîchit les données
         cancelEdit(); // Cache le formulaire
     })
     .catch(error => console.error('Erreur :', error));
@@ -211,15 +261,17 @@ function filterByCategory(filterValue) {
             'X-AUTH-TOKEN': token
         }
     }
-    fetch(url, init)
+    fetch(url+'?limit='+noLimit+'&offset='+noOffset, init)
     .then(response => {
         return response.json(); // Parse the response body as JSON
     })
     .then(data => {
-        datafiltered = data.filter(function(data) {
-            return data.category.toLowerCase().includes(filterValue)})
+        datas = data.products
+        datafiltered = datas.filter(function(datas) {
+            return datas.category.toLowerCase().includes(filterValue)})
     const tbody = document.getElementById('data-table').querySelector('tbody');
     tbody.innerHTML = ''; // Efface le contenu précédent
+    loadMoreButton.disabled=true
     if (datafiltered.length==0) {
         noResultDiv.innerHTML='Aucun produit trouvé';
     } else {
@@ -256,16 +308,18 @@ function filterByName(filterValue) {
             'X-AUTH-TOKEN': token
         }
     }
-    fetch(url, init)
+    fetch(url+'?limit='+noLimit+'&offset='+noOffset, init)
     .then(response => {
         return response.json(); // Parse the response body as JSON
     })
     .then(data => {
-        datafiltered = data.filter(function(data) {
-            return data.name.toLowerCase().includes(filterValue)
+        datas = data.products
+        datafiltered = datas.filter(function(datas) {
+            return datas.name.toLowerCase().includes(filterValue)
         })
         const tbody = document.getElementById('data-table').querySelector('tbody');
         tbody.innerHTML = ''; // Efface le contenu précédent
+        loadMoreButton.disabled=true
         if (datafiltered.length==0) {
             noResultDiv.innerHTML='Aucun produit trouvé';
         } else {
@@ -298,11 +352,11 @@ function loadCategories() {
             'X-AUTH-TOKEN': token
         }
     }
-    fetch(url, init)
+    fetch(url+'?limit='+noLimit+'&offset='+noOffset, init)
     .then(response => response.json())
     .then(datas => {
         categories = []
-        datas.forEach(data => {
+        datas.products.forEach(data => {
             categories.push(data.category)})
             uniq_cat = [...new Set(categories)]
             console.log(uniq_cat)
@@ -326,3 +380,19 @@ function loadCategories() {
     });
 }
 
+function initMessage() {
+    message_modif.classList.add('d-none')
+    message_modif.innerHTML=""
+}
+
+function initDatas() {
+    tbody.innerHTML = ''; // Efface le contenu précédent
+currentOffset = 0
+loadMoreButton.disabled=false
+loadMoreButton.innerText = 'Voir +';
+}
+
+function createMessage(message) {
+    message_modif.classList.remove('d-none')
+    message_modif.innerHTML=message
+}
