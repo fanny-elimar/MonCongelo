@@ -2,6 +2,7 @@ const noResultDiv = document.getElementById('no-result');
 congelo_display = document.getElementById('display-congelo');
 login_form = document.getElementById('login-form');
 token = "";
+const logoutButton = document.querySelector('.logout-button');
 const loadMoreButton = document.getElementById('load-more-button');
 const tbody = document.getElementById('data-table').querySelector('tbody');
 const message_modif = document.getElementById('message_modif')
@@ -38,6 +39,7 @@ function login() {
         token = data.apiToken; // Assure-toi que le token est bien dans la réponse
         // Ensuite, fais ta requête avec le token
         congelo_display.classList.remove('d-none');
+        logoutButton.classList.remove('d-none');
         login_form.classList.add('d-none');
         showAll();
     })}

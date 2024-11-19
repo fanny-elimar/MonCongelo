@@ -10,9 +10,11 @@
         <title>Mon congelo</title>
     </head>
     <body>
-
-        <h1 class="mb-5">Mon congelo</h1>
-
+<div class="container">
+    <div class="d-flex flex-row my-3">
+        <h1 class="col-8 offset-2">Mon congelo</h1>
+        <button onclick="logout()" class="border border-0 bg-transparent d-none logout-button"><img src="logout.png" style="width: 25px;"></button>
+    </div>
         <div class="" id="login-form">
 <h6>Connexion</h6>
         <div id="connexion_username" class="form-floating mx-3">
@@ -26,30 +28,34 @@
                 <button type="button" onclick="login()" class="btn-primary btn btn-sm col-4">Se connecter</button>
             </div>
         </div>
-<div class="d-none" id="display-congelo">
-    <button onclick="logout()" class="btn-primary btn btn-sm col-4">Déconnexion</button>
-<div class="border rounded mx-3 container-fluid">
-    <h6>Recherche</h6>
-        <div id="search-form-name" class="form-floating mx-3">
+<div class="m-3" id="display-congelo">
+
+<div class="border rounded container-fluid mt-3 pb-3">
+    <div class="row">
+    <h6 class="my-3">Recherche</h6>
+</div>
+    <div class="row">
+        <div id="search-form-name" class="form-floating col-6">
                 <input type="text" id="search-by-name" class="form-control mb-3">
                 <label for="search-by-name" class="">Recherche par nom...</label>
-                <button onclick="filterByName()" class="btn-primary btn btn-sm col-3">Chercher</button>
+                <button onclick="filterByName()" class="btn-primary btn btn-sm">Chercher</button>
             </div>
-            <div id="search-form-category" class="form-floating m-3">
+            <div id="search-form-category" class="form-floating col-6">
                 <input type="text" id="search-by-category" class="form-control mb-3">
                 <label for="search-by-category" class="">Recherche par catégorie...</label>
     
-                <button onclick="filterByCategory()" class="btn-primary btn btn-sm col-3">Chercher</button>
+                <button onclick="filterByCategory()" class="btn-primary btn btn-sm ">Chercher</button>
             </div>
         </div>
-            <button onclick="initDatas(),showAll()" class="btn-primary btn btn-sm col-3">Tout voir</button>
+        </div>
+            <button onclick="initDatas(),showAll()" class="btn-primary btn btn-sm col-3 mt-3">Tout voir</button>
             <div class="row justify-content-center mt-1">
                 <p id="message_modif" class="alert alert-success d-none col-6"></p>
             </div>
 <div id="no-result"></div>
-            <div class="table-responsive mt-3">
-<table id="data-table" class="table table-sm">
-    <thead>
+            <div class="table-responsive-sm mt-3">
+<table id="data-table" class="table table-sm table-striped table-hover">
+    <thead class="">
         <tr>
             <th>Nom</th>
             <th>Quantité</th>
@@ -116,6 +122,7 @@
     <button onclick="addItem()" class="btn-primary btn btn-sm">Ajouter</button>
 </div>
 
+</div>
 </div>
 
     </body>

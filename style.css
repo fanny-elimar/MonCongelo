@@ -7,3 +7,7 @@ body {
     display: none;
     margin-top: 20px;
 }
+
+th, tr {
+    font-size: small;
+}
