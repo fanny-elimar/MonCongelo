@@ -1,6 +1,9 @@
 const noResultDiv = document.getElementById('no-result');
 congelo_display = document.getElementById('display-congelo');
 login_form = document.getElementById('login-form');
+categoryButtonsDiv = document.getElementById('category-buttons');
+const editForm=document.getElementById('edit-form');
+const editName=document.getElementById('edit-nom');
 token = "";
 const logoutButton = document.querySelector('.logout-button');
 const loadMoreButton = document.getElementById('load-more-button');
@@ -42,6 +45,8 @@ function login() {
         logoutButton.classList.remove('d-none');
         login_form.classList.add('d-none');
         showAll();
+        loadCategories();
+        //loadCategoriesButtons();
     })}
 
 function logout() {
@@ -58,8 +63,8 @@ function logout() {
 }
 
 function showAll() {
-    initMessage();
-    loadCategories();
+    //initMessage();
+    //loadCategories();
     //const url = 'https://whispering-ravine-73923-3f19d70e5dc9.herokuapp.com/api/product';
     const init = { 
         method: 'GET',
@@ -81,7 +86,7 @@ function showAll() {
                 <td>${item.quantity}</td>
                 <td>${item.category}</td>
                 <td>
-                    <button onclick="editItem(${item.id}, '${item.name}','${item.quantity}','${item.category}')" class="btn btn-primary btn-sm mb-1">📝</button>
+                    <button onclick="editItem(${item.id}, '${item.name}','${item.quantity}','${item.category}'),editForm.scrollIntoView({ behavior: 'smooth', block: 'center' }),editName.focus()" class="btn btn-primary btn-sm mb-1">📝</button>
                     <button onclick="deleteItem(${item.id})" class="btn btn-primary btn-sm mb-1">❌</button>
                     </td>
             `;
@@ -95,6 +100,7 @@ function showAll() {
         // Désactiver le bouton si on a chargé tous les produits
         if (currentOffset >= data.total_count) {
             loadMoreButton.disabled = true;
+            loadMoreButton.classList.add('alert', 'alert-danger')
             loadMoreButton.innerText = 'Aucun autre produit';
         }
     
@@ -130,11 +136,10 @@ function addItem() {
     })
     .then(response => {
         if (!response.ok) throw new Error('Erreur lors de l\'ajout');
+        refreshDatas();
         createMessage(`Le produit <span style="font-weight: bold;">${addName} </span> a bien été ajouté :
-        <br>quantité : ${addQuantity}
-        <br>catégorie : ${addCategory} `)
-        initDatas();
-        showAll(); // Rafraîchit les données
+        <br>Quantité : ${addQuantity}
+        <br>Catégorie : ${addCategory} `)
         document.getElementById('add-nom').value = ''; // Réinitialise le champ
         document.getElementById('add-quantity').value = ''; // Réinitialise le champ
         document.getElementById('add-category').value = ''; // Réinitialise le champ
@@ -158,10 +163,8 @@ function deleteItem(id) {
             throw new Error(`Erreur lors de la suppression : ${response.status} ${response.statusText}`);
         }
         console.log(response)
-        initMessage();
+        refreshDatas();
         createMessage(`Le produit a bien été supprimé.`)
-        initDatas();
-        showAll(); // Rafraîchit les données
     })
     .catch(error => {
         console.error('Erreur :', error);
@@ -190,7 +193,7 @@ function show(id) {
                 <td>${data.quantity}</td>
                 <td>${data.category}</td>
                 <td>
-                    <button onclick="editItem(${data.id}, '${data.name}','${data.quantity}','${data.category}')" class="btn btn-primary btn-sm mb-1">📝</button>
+                    <button onclick="editItem(${data.id}, '${data.name}','${data.quantity}','${data.category}');" class="btn btn-primary btn-sm mb-1">📝</button>
                     <button onclick="deleteItem(${data.id})" class="btn btn-primary btn-sm mb-1">❌</button>
                     </td>
             `;
@@ -233,12 +236,10 @@ function updateItem() {
     })
     .then(response => {
         if (!response.ok) throw new Error('Erreur lors de la modification');
-        initMessage();
+        refreshDatas();
         createMessage(`Le produit <span style="font-weight: bold;">${newName} </span> a bien été modifié :
         <br>quantité : ${newQuantity}
         <br>catégorie : ${newCategory} `)
-        initDatas();
-        showAll(); // Rafraîchit les données
         cancelEdit(); // Cache le formulaire
     })
     .catch(error => console.error('Erreur :', error));
@@ -252,10 +253,11 @@ function cancelEdit() {
 }
 
 function filterByCategory(filterValue) {
+    initMessage();
     noResultDiv.innerHTML='';
     const searchByCategory = document.getElementById("search-by-category");
-    const categoryFilter = searchByCategory.value.toLowerCase()
-    filterValue = categoryFilter;
+    //const categoryFilter = searchByCategory.value.toLowerCase()
+    //filterValue = categoryFilter;
     const init = { 
         method: 'GET',
         headers: {
@@ -299,9 +301,10 @@ function filterByCategory(filterValue) {
 }
 
 function filterByName(filterValue) {
+    initMessage();
     noResultDiv.innerHTML='';
     const searchByName = document.getElementById("search-by-name");
-    const nameFilter = searchByName.value.toLowerCase()
+    const nameFilter = searchByName.value.toLowerCase().trim()
     filterValue = nameFilter;
     const init = { 
         method: 'GET',
@@ -324,6 +327,7 @@ function filterByName(filterValue) {
         loadMoreButton.disabled=true
         if (datafiltered.length==0) {
             noResultDiv.innerHTML='Aucun produit trouvé';
+            noResultDiv.classList.add('alert', 'alert-warning')
         } else {
             datafiltered.forEach(item => {
                 const row = document.createElement('tr');
@@ -373,6 +377,46 @@ function loadCategories() {
             categorieSelect.appendChild(option);
         });
         })
+        uniq_cat.forEach(category => {
+        const button = document.createElement('button');
+        button.value = category;
+        button.textContent = category;
+        button.classList.add("btn-light","btn","btn-sm")
+        button.addEventListener('click', function() {filterByCategory(category) });
+        categoryButtonsDiv.appendChild(button);
+        // Vider le select avant d'ajouter les nouvelles options
+        })
+    })
+    .catch(error => {
+        console.error('Erreur lors du chargement des catégories :', error);
+    });
+}
+
+/*function loadCategoriesButtons() {
+    const init = { 
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json",
+            'X-AUTH-TOKEN': token
+        }
+    }
+    fetch(url+'?limit='+noLimit+'&offset='+noOffset, init)
+    .then(response => response.json())
+    .then(datas => {
+        categories = []
+        datas.products.forEach(data => {
+            categories.push(data.category)})
+            uniq_cat = [...new Set(categories)]
+            console.log(uniq_cat)
+            uniq_cat.forEach(category => {
+            const button = document.createElement('button');
+            button.value = category;
+            button.textContent = category;
+            button.classList.add("btn-light","btn","btn-sm")
+            button.addEventListener('click', function() {filterByCategory(category) });
+            categoryButtonsDiv.appendChild(button);
+        });
+
         
         // Vider le select avant d'ajouter les nouvelles options
         
@@ -380,7 +424,7 @@ function loadCategories() {
     .catch(error => {
         console.error('Erreur lors du chargement des catégories :', error);
     });
-}
+}*/
 
 function initMessage() {
     message_modif.classList.add('d-none')
@@ -389,6 +433,7 @@ function initMessage() {
 
 function initDatas() {
     tbody.innerHTML = ''; // Efface le contenu précédent
+    categoryButtonsDiv.innerHTML=''
 currentOffset = 0
 loadMoreButton.disabled=false
 loadMoreButton.innerText = 'Voir +';
@@ -397,4 +442,11 @@ loadMoreButton.innerText = 'Voir +';
 function createMessage(message) {
     message_modif.classList.remove('d-none')
     message_modif.innerHTML=message
+}
+
+function refreshDatas() {
+    initMessage();
+    initDatas();
+    showAll();
+    loadCategories();
 }

@@ -12,11 +12,11 @@
     <body>
 <div class="container">
     <div class="d-flex flex-row my-3">
-        <h1 class="col-8 offset-2">Mon congelo</h1>
+        <h1 class="col-8 offset-2 text-primary">Mon congelo</h1>
         <button onclick="logout()" class="border border-0 bg-transparent d-none logout-button"><img src="logout.png" style="width: 25px;"></button>
     </div>
         <div class="" id="login-form">
-<h6>Connexion</h6>
+<h6 class="text-primary">Connexion</h6>
         <div id="connexion_username" class="form-floating mx-3">
                 <input type="text" id="username" class="form-control mb-3">
                 <label for="username" class="">Nom d'utilisateur</label>
@@ -28,27 +28,28 @@
                 <button type="button" onclick="login()" class="btn-primary btn btn-sm col-4">Se connecter</button>
             </div>
         </div>
-<div class="m-3" id="display-congelo">
+<div class="m-3 d-none" id="display-congelo">
 
 <div class="border rounded container-fluid mt-3 pb-3">
     <div class="row">
-    <h6 class="my-3">Recherche</h6>
+    <h6 class="my-3 text-primary">Recherche</h6>
 </div>
     <div class="row">
-        <div id="search-form-name" class="form-floating col-6">
-                <input type="text" id="search-by-name" class="form-control mb-3">
+        <div id="search-form-name" class="form-floating col-12">
+                <input type="text" id="search-by-name" class="form-control ">
                 <label for="search-by-name" class="">Recherche par nom...</label>
-                <button onclick="filterByName()" class="btn-primary btn btn-sm">Chercher</button>
+                <button onclick="filterByName()" class="btn-primary btn btn-sm mb-1">Chercher</button>
             </div>
-            <div id="search-form-category" class="form-floating col-6">
+            <div id="category-buttons"></div>
+            <!--<div id="search-form-category" class="form-floating col-6">
                 <input type="text" id="search-by-category" class="form-control mb-3">
                 <label for="search-by-category" class="">Recherche par catégorie...</label>
     
                 <button onclick="filterByCategory()" class="btn-primary btn btn-sm ">Chercher</button>
-            </div>
+            </div>-->
         </div>
         </div>
-            <button onclick="initDatas(),showAll()" class="btn-primary btn btn-sm col-3 mt-3">Tout voir</button>
+            <button onclick="refreshDatas()" class="btn-primary btn btn-sm col-3 mt-3">Tout voir</button>
             <div class="row justify-content-center mt-1">
                 <p id="message_modif" class="alert alert-success d-none col-6"></p>
             </div>
@@ -71,7 +72,7 @@
 </div>
 
 <div id="edit-form" class="mb-5">
-    <h5>Modifier l'élément</h5>
+    <h5 class="text-primary">Modifier l'élément</h5>
     <div class="input-group input-group-sm mb-3 row">
         <label for="edit-nom" class="form-label col-3">Nom:</label>
         <input type="text" id="edit-nom" class="form-control col-6">
@@ -96,7 +97,7 @@
 </div>
 
 <div id="add-form" class="mt-3">
-    <h5>Ajouter un élément</h5>
+    <h5 class="text-primary">Ajouter un élément</h5>
     <div class="input-group input-group-sm mb-3 row">
         <label for="add-nom" class="form-label col-3">Nom:</label>
         <input type="text" id="add-nom" class="form-control col-6">
