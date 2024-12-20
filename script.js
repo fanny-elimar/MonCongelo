@@ -73,7 +73,7 @@ function login() {
             return response.json();
         })
         .then((data) => {
-            window.location.replace('/moncongelo/index.html')
+            window.location.replace('index.html')
         })}
 
 function logout() {
