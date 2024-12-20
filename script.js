@@ -102,10 +102,33 @@ function showAll() {
     }
     fetch(url+'?limit='+limit+'&offset='+currentOffset, init)
     .then(response => {
+        // Vérifier si la réponse est un succès (statut 200) ou si c'est une erreur 404
+        if (!response.ok) {
+            if (response.status === 404) {
+                // Si c'est une erreur 404, cela signifie qu'aucun produit n'a été trouvé
+                document.getElementById('no-products-message').style.display = 'block';
+                return; // Sortir de la fonction sans traiter les produits
+            } else {
+                // Pour toute autre erreur (par exemple 500 ou autres)
+                throw new Error(`Erreur HTTP: ${response.status}`);
+            }
+        }
         return response.json(); // Parse the response body as JSON
     })
     .then(data => {
+        if (!data || !data.products || data.products.length === 0) {
+            // Si les produits sont vides ou inexistants
+            document.getElementById('no-products-message').style.display = 'block';
+            document.getElementById('button-tout-voir').style.display = 'none';
+            document.getElementById('data-table').style.display = 'none';
+            document.getElementById('load-more-button').style.display = 'none'
+            return; // Sortir de la fonction si aucune donnée à afficher
+        }
         console.log(data)
+        document.getElementById('no-products-message').style.display = 'none'; 
+        document.getElementById('button-tout-voir').removeAttribute('style');
+        document.getElementById('data-table').removeAttribute('style');
+        document.getElementById('load-more-button').removeAttribute('style');
         data.products.forEach(item => {
             const row = document.createElement('tr');
             row.innerHTML = `
@@ -134,7 +157,7 @@ function showAll() {
     })
     .catch(error => {
         console.error('There has been a problem with your fetch operation:', error);
-        alert('Une erreur est survenue lors de la récupération des données.');
+        //alert('Une erreur est survenue lors de la récupération des données.');
     });
 }
 
@@ -386,8 +409,24 @@ function loadCategories() {
         }
     }
     fetch(url+'?limit='+noLimit+'&offset='+noOffset, init)
-    .then(response => response.json())
+    .then(response => {
+        // Vérifier si la réponse est un succès (statut 200) ou si c'est une erreur 404
+        if (!response.ok) {
+            if (response.status === 404) {
+                // Si c'est une erreur 404, cela signifie qu'aucun produit n'a été trouvé
+                return; // Sortir de la fonction sans traiter les produits
+            } else {
+                // Pour toute autre erreur (par exemple 500 ou autres)
+                throw new Error(`Erreur HTTP: ${response.status}`);
+            }
+        }
+        return response.json(); // Parse the response body as JSON
+    })
     .then(datas => {
+        if (!datas || !datas.products || datas.products.length === 0) {
+            // Si les produits sont vides ou inexistants
+            return; // Sortir de la fonction si aucune donnée à afficher
+        }
         categories = []
         datas.products.forEach(data => {
             categories.push(data.category)})

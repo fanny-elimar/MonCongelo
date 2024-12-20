@@ -26,7 +26,7 @@
                 <label for="password" class="">Mot de passe</label>
     </div>
                 <div><button type="button" onclick="login()" class="btn-primary btn btn-sm col-4">Se connecter</button></div>
-                <div><a type="button" href="/registration.html" class="btn-primary btn btn-sm col-4 mt-3">S'inscrire</a></div>
+                <div><a type="button" href="MonCongelo/registration.html" class="btn-primary btn btn-sm col-4 mt-3">S'inscrire</a></div>
             </div>
         </div>
 <div class="m-3 d-none" id="display-congelo">
@@ -50,7 +50,10 @@
             </div>-->
         </div>
         </div>
-            <button onclick="refreshDatas()" class="btn-primary btn btn-sm col-3 mt-3">Tout voir</button>
+        <div id="no-products-message" style="display: none; color: red; padding: 10px; background-color: #f8d7da;">
+            Vous n'avez pas encore de produit dans votre congélo.
+        </div>
+            <button onclick="refreshDatas()" class="btn-primary btn btn-sm col-3 mt-3" id="button-tout-voir">Tout voir</button>
             <div class="row justify-content-center mt-1">
                 <p id="message_modif" class="alert alert-success d-none col-6"></p>
             </div>
