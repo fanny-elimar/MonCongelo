@@ -49,6 +49,33 @@ function login() {
         //loadCategoriesButtons();
     })}
 
+    function register() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const passwordVerify = document.getElementById('passwordVerify').value;
+        const registerUrl = 'https://whispering-ravine-73923-3f19d70e5dc9.herokuapp.com/api/registration';
+        const credentials = {
+        username: username,
+        password: password,
+        passwordVerify: passwordVerify
+    };
+        fetch(registerUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(credentials)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erreur lors de la création du compte : ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            window.location.replace('/moncongelo/index.html')
+        })}
+
 function logout() {
     // Rediriger l'utilisateur vers la page de connexion
    // window.location.href = '/MonCongelo/index.php';  // Ou /home, selon ton besoin

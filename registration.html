@@ -16,7 +16,7 @@
         <button onclick="logout()" class="border border-0 bg-transparent d-none logout-button"><img src="logout.png" style="width: 25px;"></button>
     </div>
         <div class="" id="login-form">
-<h6 class="text-primary">Connexion</h6>
+<h6 class="text-primary">Création de compte</h6>
         <div id="connexion_username" class="form-floating mx-3">
                 <input type="text" id="username" class="form-control mb-3">
                 <label for="username" class="">Nom d'utilisateur</label>
@@ -24,9 +24,13 @@
         <div id="connexion_mdp" class="form-floating mx-3">
                 <input type="password" id="password" class="form-control mb-3">
                 <label for="password" class="">Mot de passe</label>
+        </div>
+        <div id="connexion_mdp_verify" class="form-floating mx-3">
+            <input type="password" id="passwordVerify" class="form-control mb-3">
+            <label for="passwordVerify" class="">Retapez le mot de passe</label>
     </div>
-                <div><button type="button" onclick="login()" class="btn-primary btn btn-sm col-4">Se connecter</button></div>
-                <div><a type="button" href="/registration.html" class="btn-primary btn btn-sm col-4 mt-3">S'inscrire</a></div>
+                <div><button type="button" onclick="register()" class="btn-primary btn btn-sm col-4">S'enregistrer</button></div>
+                <div><a type="button" href="/index.html" class="btn-primary btn btn-sm col-4 mt-3">Retour à la connexion</a></div>
             </div>
         </div>
 <div class="m-3 d-none" id="display-congelo">
